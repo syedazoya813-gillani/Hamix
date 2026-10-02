@@ -1,0 +1,25 @@
+'use client';
+import { useEffect, useMemo, useState } from 'react';
+import { CalendarDays, Plus, Pencil, Trash2, Clock3 } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
+
+type ClassRow = { id:string; day_of_week:number; course_code:string|null; course_name:string; start_time:string; end_time:string; room:string|null; instructor:string|null };
+const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const blank = {day:'1',code:'',name:'',start:'09:00',end:'10:00',room:'',instructor:''};
+function time(v:string){ return v?.slice(0,5) || ''; }
+export default function TimetablePage(){
+  const s=createClient();
+  const [rows,setRows]=useState<ClassRow[]>([]); const [form,setForm]=useState(blank); const [editing,setEditing]=useState<ClassRow|null>(null); const [open,setOpen]=useState(false); const [loading,setLoading]=useState(true);
+  async function load(){ const {data}=await s.from('class_timetable').select('*').order('day_of_week').order('start_time'); setRows(data||[]); setLoading(false); }
+  useEffect(()=>{load()},[]);
+  function edit(r:ClassRow){setEditing(r);setForm({day:String(r.day_of_week),code:r.course_code||'',name:r.course_name,start:time(r.start_time),end:time(r.end_time),room:r.room||'',instructor:r.instructor||''});setOpen(true)}
+  function add(){setEditing(null);setForm(blank);setOpen(true)}
+  async function save(e:React.FormEvent){e.preventDefault(); const {data:{user}}=await s.auth.getUser(); if(!user)return; const payload={user_id:user.id,day_of_week:Number(form.day),course_code:form.code||null,course_name:form.name.trim(),start_time:form.start,end_time:form.end,room:form.room||null,instructor:form.instructor||null}; if(editing) await s.from('class_timetable').update(payload).eq('id',editing.id); else await s.from('class_timetable').insert(payload); setOpen(false);load();}
+  async function remove(id:string){if(!confirm('Delete this class?'))return;await s.from('class_timetable').delete().eq('id',id);load()}
+  const grouped=useMemo(()=>days.map((_,i)=>rows.filter(r=>r.day_of_week===i+1)),[rows]);
+  return <div>
+    <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><div className="flex items-center gap-3"><CalendarDays className="text-violet-300"/><h1 className="text-3xl font-black">University Class Timetable</h1></div><p className="muted mt-1">Add your recurring classes. Hamix uses them as fixed time blocks when finding free study time.</p></div><button onClick={add} className="btn btn-primary gap-2"><Plus size={16}/> Add class</button></div>
+    {open&&<form onSubmit={save} className="glass card mb-6 grid gap-3 md:grid-cols-6"><select className="input" value={form.day} onChange={e=>setForm({...form,day:e.target.value})}>{days.map((d,i)=><option key={d} value={i+1}>{d}</option>)}</select><input className="input" placeholder="Course code" value={form.code} onChange={e=>setForm({...form,code:e.target.value})}/><input required className="input md:col-span-2" placeholder="Course name" value={form.name} onChange={e=>setForm({...form,name:e.target.value})}/><input required className="input" type="time" value={form.start} onChange={e=>setForm({...form,start:e.target.value})}/><input required className="input" type="time" value={form.end} onChange={e=>setForm({...form,end:e.target.value})}/><input className="input" placeholder="Room" value={form.room} onChange={e=>setForm({...form,room:e.target.value})}/><input className="input md:col-span-2" placeholder="Instructor" value={form.instructor} onChange={e=>setForm({...form,instructor:e.target.value})}/><div className="flex gap-2 md:col-span-3"><button className="btn btn-primary">{editing?'Update class':'Save class'}</button><button type="button" onClick={()=>setOpen(false)} className="btn">Cancel</button></div></form>}
+    {loading?<p className="muted">Loading timetable...</p>:<div className="grid gap-4 lg:grid-cols-2">{grouped.map((list,i)=><div className="glass card" key={days[i]}><div className="mb-4 flex items-center justify-between"><h2 className="font-bold">{days[i]}</h2><span className="muted text-xs">{list.length} class{list.length===1?'':'es'}</span></div>{list.length?<div className="space-y-2">{list.map(r=><div key={r.id} className="rounded-xl bg-white/[.03] p-3"><div className="flex items-start justify-between gap-3"><div><div className="font-semibold">{r.course_code&&<span className="text-violet-300">{r.course_code} · </span>}{r.course_name}</div><div className="muted mt-1 flex flex-wrap gap-3 text-xs"><span className="flex items-center gap-1"><Clock3 size={12}/>{time(r.start_time)}–{time(r.end_time)}</span>{r.room&&<span>{r.room}</span>}{r.instructor&&<span>{r.instructor}</span>}</div></div><div className="flex gap-1"><button onClick={()=>edit(r)} className="rounded-lg p-2 hover:bg-white/5"><Pencil size={14}/></button><button onClick={()=>remove(r.id)} className="rounded-lg p-2 text-red-300 hover:bg-red-500/10"><Trash2 size={14}/></button></div></div></div>)}</div>:<div className="muted text-sm">No classes. This is available time for planning.</div>}</div>)}</div>}
+  </div>
+}
