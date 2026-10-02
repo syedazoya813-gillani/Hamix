@@ -16,5 +16,5 @@ export function getAIProviderStatus() {
   return { provider, configured, fallback: !configured };
 }
 
-export async function extractHamixInput(input: string) { return getAIProvider().extract(input); }
-export async function generateHamixInsights(input: unknown) { return getAIProvider().insights(input); }
+export async function extractHamiqInput(input: string) { return getAIProvider().extract(input); }
+export async function generateHamiqInsights(input: unknown) { return getAIProvider().insights(input); }

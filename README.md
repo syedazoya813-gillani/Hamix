@@ -1,6 +1,6 @@
-# Hamix — Supabase + AI
+# Hamiq — Supabase + AI
 
-Hamix is a full-stack personal scenario simulator. It stores the user's actual data in Supabase and uses a server-side AI provider for structured extraction and explanations.
+Hamiq is a full-stack personal scenario simulator. It stores the user's actual data in Supabase and uses a server-side AI provider for structured extraction and explanations.
 
 ## Stack
 - Next.js App Router + TypeScript
@@ -41,7 +41,7 @@ Open Supabase SQL Editor and run:
 
 `supabase/migrations/001_lifetwin.sql`
 
-This creates the Hamix tables, RLS policies, user trigger, and private `lifetwin-files` storage bucket.
+This creates the Hamiq tables, RLS policies, user trigger, and private `lifetwin-files` storage bucket.
 
 ## 4. Run
 
@@ -96,7 +96,7 @@ Your data
    ↓
 Supabase
    ↓
-Hamix baseline
+Hamiq baseline
    ↓
 Scenario variables
    ↓
@@ -105,7 +105,7 @@ Deterministic simulation
 AI explanation
 ```
 
-Hamix is a scenario simulator, not a literal future predictor.
+Hamiq is a scenario simulator, not a literal future predictor.
 
 
 ## Groq model
@@ -126,7 +126,7 @@ It adds `progress`, `reminder_at`, `category`, and `actual_hours` to tasks.
 - Set a browser reminder time
 - Enable browser notifications from the Tasks page
 
-Browser reminders work while the Hamix tab is open. For reminders while the app is completely closed, add Web Push/FCM + a scheduled server/cron worker in production.
+Browser reminders work while the Hamiq tab is open. For reminders while the app is completely closed, add Web Push/FCM + a scheduled server/cron worker in production.
 
 ### Progress reports
 Open `/dashboard/reports` from the sidebar. The report always reads the latest Supabase data and can be regenerated at any time. It includes task completion, workload, goal progress, habits/activity, and an optional AI-written summary. Use **Print / Save PDF** to export the report through the browser print dialog.
@@ -134,13 +134,13 @@ Open `/dashboard/reports` from the sidebar. The report always reads the latest S
 ## University timetable + personal assistant
 Run `supabase/migrations/003_timetable.sql` after the previous migrations. The app now includes:
 - `/dashboard/timetable` for recurring university classes
-- `/dashboard/assistant` for one personal Hamix chatbot
+- `/dashboard/assistant` for one personal Hamiq chatbot
 - `/api/recommendations` for deterministic task prioritization
 - `/api/assistant` for AI planning using the user's real Supabase data
 
-The assistant considers tasks, deadlines, progress, goals, class timetable, upcoming events, and Hamix capacity. It provides suggestions, not guaranteed predictions.
+The assistant considers tasks, deadlines, progress, goals, class timetable, upcoming events, and Hamiq capacity. It provides suggestions, not guaranteed predictions.
 
-## Hamix access flow
+## Hamiq access flow
 - `/demo` is public and requires no login. It uses sample data only.
 - `/login` is for authorized users only.
 - Public self-registration is disabled; `/signup` redirects to `/login`.

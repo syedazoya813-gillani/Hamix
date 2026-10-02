@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { generateHamixInsights } from '@/lib/ai/extraction';
+import { generateHamiqInsights } from '@/lib/ai/extraction';
 
 export async function POST(req:Request){
   const s=await createClient(); const {data:{user}}=await s.auth.getUser(); if(!user)return NextResponse.json({error:'Unauthorized'},{status:401});
@@ -14,6 +14,6 @@ export async function POST(req:Request){
     s.from('profiles').select('timezone').eq('id',user.id).maybeSingle()
   ]);
   const context={userMessage:message,today:new Date().toISOString(),timezone:profile?.timezone||'Asia/Karachi',twin,unfinishedTasks:tasks||[],goals:goals||[],weeklyClassTimetable:classes||[],upcomingEvents:events||[]};
-  try{const answer=await generateHamixInsights({role:'personal planner',instruction:'You are the user’s single personal Hamix assistant. Answer only about what this user should do next, how to use their free time, scheduling around classes, deadlines, goals, and workload. Use the supplied data. Give a short prioritized action plan with 1-3 actions, explain why, and mention when to do them if the data supports it. Never invent a class, deadline, or time. If there is no free time, say so. Protect user agency: recommendations are suggestions, not commands.',...context});return NextResponse.json({answer});}
+  try{const answer=await generateHamiqInsights({role:'personal planner',instruction:'You are the user’s single personal Hamiq assistant. Answer only about what this user should do next, how to use their free time, scheduling around classes, deadlines, goals, and workload. Use the supplied data. Give a short prioritized action plan with 1-3 actions, explain why, and mention when to do them if the data supports it. Never invent a class, deadline, or time. If there is no free time, say so. Protect user agency: recommendations are suggestions, not commands.',...context});return NextResponse.json({answer});}
   catch(e){return NextResponse.json({answer:`I couldn't reach the AI right now. Based on your stored data, focus first on: ${(tasks||[]).slice(0,3).map((x:any)=>x.title).join(', ')||'your next goal'}.`,fallback:true});}
 }

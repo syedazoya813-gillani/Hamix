@@ -53,14 +53,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         .lte('reminder_at', now.toISOString())
         .neq('status', 'done');
 
-      const seen = JSON.parse(localStorage.getItem('hamix-reminders') || '{}');
+      const seen = JSON.parse(localStorage.getItem('hamiq-reminders') || '{}');
       for (const task of data || []) {
         if (!seen[task.id]) {
-          new Notification('Hamix reminder', { body: task.title });
+          new Notification('Hamiq reminder', { body: task.title });
           seen[task.id] = Date.now();
         }
       }
-      localStorage.setItem('hamix-reminders', JSON.stringify(seen));
+      localStorage.setItem('hamiq-reminders', JSON.stringify(seen));
     }
 
     void checkReminders();
@@ -83,9 +83,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           className="flex items-center gap-3"
         >
           <span className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl bg-[#0f172a] shadow-sm">
-            <img src="/hamix-mark.png" alt="Hamix" className="h-full w-full object-cover" />
+            <img src="/hamiq-mark.svg" alt="Hamiq" className="h-full w-full object-cover" />
           </span>
-          <span className="text-lg font-black tracking-tight">Hamix</span>
+          <span className="text-lg font-black tracking-tight">Hamiq</span>
         </Link>
         {close && (
           <button
@@ -171,7 +171,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             >
               <Menu size={19} />
             </button>
-            <span className="flex items-center gap-2"><img src="/hamix-mark.png" alt="Hamix" className="h-8 w-8 rounded-lg object-cover" /><span className="font-black">Hamix</span></span>
+            <span className="flex items-center gap-2"><img src="/hamiq-mark.svg" alt="Hamiq" className="h-8 w-8 rounded-lg object-cover" /><span className="font-black">Hamiq</span></span>
             <span className="h-9 w-9 rounded-full bg-[#f2e6d3]" />
           </div>
         </header>

@@ -39,7 +39,7 @@ export default function Settings(){
   }
 
   return <div>
-    <div className="mb-8"><div className="flex items-center gap-3"><Settings2 className="text-violet-300"/><h1 className="text-3xl font-black">Settings</h1></div><p className="muted mt-1">Manage your Hamix profile, study routine and AI connection.</p></div>
+    <div className="mb-8"><div className="flex items-center gap-3"><Settings2 className="text-violet-300"/><h1 className="text-3xl font-black">Settings</h1></div><p className="muted mt-1">Manage your Hamiq profile, study routine and AI connection.</p></div>
     <div className="grid gap-5 lg:grid-cols-2">
       <div className="glass card">
         <h2 className="text-lg font-bold">Profile & Study Routine</h2>
@@ -53,7 +53,7 @@ export default function Settings(){
           <div><span className="muted text-xs">Start</span><input className="input mt-1" type="time" value={studyStart} onChange={e=>setStudyStart(e.target.value)}/></div>
           <div><span className="muted text-xs">End</span><input className="input mt-1" type="time" value={studyEnd} onChange={e=>setStudyEnd(e.target.value)}/></div>
         </div>
-        <p className="muted mt-1 text-xs">Hamix uses this window when suggesting when to study. Leave it empty if your study time changes daily.</p>
+        <p className="muted mt-1 text-xs">Hamiq uses this window when suggesting when to study. Leave it empty if your study time changes daily.</p>
         <button onClick={save} className="btn btn-primary mt-5">Save changes</button>{message&&<p className="mt-3 text-sm text-cyan-300">{message}</p>}
       </div>
       <div className="glass card"><div className="flex items-center gap-3"><Sparkles className="text-violet-300"/><h2 className="text-lg font-bold">AI connection</h2></div><div className="mt-5 rounded-xl bg-white/[.03] p-4"><div className="flex items-center gap-2"><span className={`h-2.5 w-2.5 rounded-full ${ai?.configured?'bg-cyan-400':'bg-amber-400'}`}/><b>{ai?.configured?'AI connected':'Demo fallback active'}</b></div><p className="muted mt-2 text-sm">Provider: {ai?.provider||'loading...'}</p>{!ai?.configured&&<p className="muted mt-3 text-sm">Add the provider API key to <code>.env.local</code> and restart Next.js.</p>}</div><div className="mt-5 rounded-xl bg-white/[.03] p-4"><div className="flex items-center gap-2"><ShieldCheck size={17} className="text-cyan-300"/><b>Data isolation</b></div><p className="muted mt-2 text-sm">Your Supabase Row Level Security policies restrict database rows to your authenticated user.</p></div></div>

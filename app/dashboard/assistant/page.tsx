@@ -115,7 +115,7 @@ export default function Assistant() {
           </div>
           <h1>How can I help?</h1>
           <p>
-            Ask Hamix about your tasks, timetable, deadlines, study plan, or free time.
+            Ask Hamiq about your tasks, timetable, deadlines, study plan, or free time.
           </p>
         </div>
 
@@ -131,12 +131,12 @@ export default function Assistant() {
         <section className="assistant-chat">
           {messages.length === 0 ? (
             <div className="assistant-welcome">
-              <div className="assistant-welcome-icon hamix-assistant-logo">
-                <img src="/hamix-mark.png" alt="Hamix" />
+              <div className="assistant-welcome-icon hamiq-assistant-logo">
+                <img src="/hamiq-mark.svg" alt="Hamiq" />
               </div>
               <h2>What would you like to work on?</h2>
               <p>
-                I can turn your current Hamix data into a clear next step instead of a long block of text.
+                I can turn your current Hamiq data into a clear next step instead of a long block of text.
               </p>
 
               <div className="assistant-prompts">
@@ -159,10 +159,10 @@ export default function Assistant() {
               {messages.map((item) => (
                 <div key={item.id} className={`chat-row ${item.role}`}>
                   <div className="chat-avatar">
-                    {item.role === 'assistant' ? <img src="/hamix-mark.png" alt="Hamix" className="h-7 w-7 rounded-lg object-cover" /> : <User size={17} />}
+                    {item.role === 'assistant' ? <img src="/hamiq-mark.svg" alt="Hamiq" className="h-7 w-7 rounded-lg object-cover" /> : <User size={17} />}
                   </div>
                   <div className="chat-content">
-                    <div className="chat-name">{item.role === 'assistant' ? 'Hamix' : 'You'}</div>
+                    <div className="chat-name">{item.role === 'assistant' ? 'Hamiq' : 'You'}</div>
                     {item.role === 'assistant' ? (
                       <AssistantMessage text={item.text} />
                     ) : (
@@ -174,9 +174,9 @@ export default function Assistant() {
 
               {loading && (
                 <div className="chat-row assistant">
-                  <div className="chat-avatar"><img src="/hamix-mark.png" alt="Hamix" className="h-7 w-7 rounded-lg object-cover" /></div>
+                  <div className="chat-avatar"><img src="/hamiq-mark.svg" alt="Hamiq" className="h-7 w-7 rounded-lg object-cover" /></div>
                   <div className="chat-content">
-                    <div className="chat-name">Hamix</div>
+                    <div className="chat-name">Hamiq</div>
                     <div className="typing"><span /><span /><span /></div>
                   </div>
                 </div>
@@ -194,7 +194,7 @@ export default function Assistant() {
                   void ask();
                 }
               }}
-              placeholder="Message Hamix..."
+              placeholder="Message Hamiq..."
               rows={1}
               disabled={loading}
             />
@@ -207,7 +207,7 @@ export default function Assistant() {
               <Send size={17} />
             </button>
           </form>
-          <div className="composer-note">Hamix can use your current tasks, timetable and available time.</div>
+          <div className="composer-note">Hamiq can use your current tasks, timetable and available time.</div>
         </section>
 
         <aside className="assistant-context">

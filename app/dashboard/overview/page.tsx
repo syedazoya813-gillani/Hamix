@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import Link from 'next/link';
 import { ArrowRight, Bell, CalendarDays, CheckCircle2, Clock3, Flame, Sparkles, Target, TrendingUp, BookOpen, BarChart3 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
@@ -114,7 +115,7 @@ export default async function Overview() {
     <div>
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <h1 className="text-3xl font-black">Your Hamix</h1>
+          <h1 className="text-3xl font-black">Your Hamiq</h1>
           <p className="muted mt-1">A live snapshot built from your actual Supabase data.</p>
         </div>
         <div className="flex gap-2">
@@ -194,7 +195,7 @@ export default async function Overview() {
         <div className="glass card"><div className="muted text-xs">Active reminders</div><div className="mt-2 flex items-center gap-2 text-2xl font-black"><Bell size={20} className="text-violet-300"/>{pendingReminders}</div></div>
       </div>
 
-      <p className="muted mt-6 text-sm">Everything shown here is calculated from your authenticated Supabase data: tasks, goals, timetable, calendar events and Hamix baseline. No demo data is used.</p>
+      <p className="muted mt-6 text-sm">Everything shown here is calculated from your authenticated Supabase data: tasks, goals, timetable, calendar events and Hamiq baseline. No demo data is used.</p>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { generateHamixInsights } from '@/lib/ai/extraction';
+import { generateHamiqInsights } from '@/lib/ai/extraction';
 
 export async function POST(req: Request) {
   const supabase = await createClient();
@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   try {
     const body = await req.json();
-    const insight = await generateHamixInsights(body);
+    const insight = await generateHamiqInsights(body);
     return NextResponse.json({ insight });
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : 'AI request failed' }, { status: 500 });

@@ -1,6 +1,6 @@
 import type { AIProvider, ExtractionResult } from './provider';
 
-const extractionSystem = `You are Hamix's structured data extraction engine. Convert the user's message into ONE useful personal-life object. Return ONLY valid JSON with these keys: type,title,description,deadline,priority,estimatedHours,confidence. type must be one of TASK,GOAL,HABIT,EVENT,DEADLINE,PROJECT,SCHEDULE,CONSTRAINT,NOTE,UNKNOWN. priority must be low, medium, or high. deadline must be an ISO 8601 date/time string only when the message gives a clear deadline; otherwise omit it. estimatedHours must be a number only when reasonably supported. confidence must be between 0 and 1. Never invent a date, time, task, or number. If uncertain, use UNKNOWN or omit uncertain fields.`;
+const extractionSystem = `You are Hamiq's structured data extraction engine. Convert the user's message into ONE useful personal-life object. Return ONLY valid JSON with these keys: type,title,description,deadline,priority,estimatedHours,confidence. type must be one of TASK,GOAL,HABIT,EVENT,DEADLINE,PROJECT,SCHEDULE,CONSTRAINT,NOTE,UNKNOWN. priority must be low, medium, or high. deadline must be an ISO 8601 date/time string only when the message gives a clear deadline; otherwise omit it. estimatedHours must be a number only when reasonably supported. confidence must be between 0 and 1. Never invent a date, time, task, or number. If uncertain, use UNKNOWN or omit uncertain fields.`;
 
 async function callGroq(messages: {role:'system'|'user';content:string}[], jsonMode = false) {
   const key = process.env.GROQ_API_KEY;
@@ -37,7 +37,7 @@ export const groqAI: AIProvider = {
   },
   async insights(input) {
     return callGroq([
-      { role: 'system', content: 'You are Hamix, an AI explanation layer. Explain the supplied deterministic simulation results in concise, practical language. Do not invent numbers. Clearly distinguish modeled results from facts. Mention important assumptions and trade-offs.' },
+      { role: 'system', content: 'You are Hamiq, an AI explanation layer. Explain the supplied deterministic simulation results in concise, practical language. Do not invent numbers. Clearly distinguish modeled results from facts. Mention important assumptions and trade-offs.' },
       { role: 'user', content: JSON.stringify(input) }
     ]);
   }

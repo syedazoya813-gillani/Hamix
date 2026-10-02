@@ -99,7 +99,7 @@ export default function Onboarding() {
     <main className="flex min-h-screen items-center justify-center p-6">
       <div className="glass card w-full max-w-xl">
         <div className="mb-6">
-          <img src="/hamix-logo.png" alt="Hamix" className="h-14 w-auto object-contain" />
+          <img src="/hamiq-logo.svg" alt="Hamiq" className="h-14 w-auto object-contain" />
         </div>
 
         <div className="text-sm text-[#946b2f]">STEP {step} OF 7</div>
@@ -134,7 +134,7 @@ export default function Onboarding() {
         {step === 3 && (
           <>
             <h1 className="mt-4 text-3xl font-black">How many hours do you usually study per day?</h1>
-            <p className="muted mt-2 text-sm">This value is saved to your Hamix profile and used throughout your dashboard.</p>
+            <p className="muted mt-2 text-sm">This value is saved to your Hamiq profile and used throughout your dashboard.</p>
             <input
               value={study}
               onChange={e => setStudy(e.target.value)}
@@ -203,7 +203,7 @@ export default function Onboarding() {
           onClick={() => step < 7 ? setStep(step + 1) : finish()}
           className="btn btn-primary mt-7 w-full"
         >
-          {step < 7 ? 'Continue' : 'Build my Hamix'}
+          {step < 7 ? 'Continue' : 'Build my Hamiq'}
         </button>
       </div>
     </main>

@@ -1,0 +1,10 @@
+<svg width="1584" height="396" viewBox="0 0 1584 396" xmlns="http://www.w3.org/2000/svg">
+<rect width="1584" height="396" fill="#fff"/>
+<rect x="85" y="48" width="300" height="300" rx="64" fill="#0f172a"/>
+<circle cx="320" cy="105" r="17" fill="#fbbf24"/>
+<path d="M160 120V276M160 198H275M275 120V229" stroke="#fff" stroke-width="22" stroke-linecap="round"/>
+<path d="M286 252l25 25 48-66" fill="none" stroke="#27b4f2" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="430" y="225" font-family="Arial, Helvetica, sans-serif" font-size="138" font-weight="700" fill="#0f172a">Hami</text>
+<text x="777" y="225" font-family="Arial, Helvetica, sans-serif" font-size="138" font-weight="700" fill="#18a9e8">q</text>
+<text x="435" y="294" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="500" fill="#64748b">Plan. Track. Achieve.</text>
+</svg>
