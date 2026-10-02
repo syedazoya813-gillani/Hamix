@@ -15,7 +15,7 @@ create table if not exists public.twin_profiles (
   available_hours numeric default 5,
   sleep_hours numeric default 7,
   workload_level text default 'medium',
-  study_hours numeric default 2,
+  study_hours numeric,
   work_hours numeric default 0,
   baseline_confidence numeric default 1,
   updated_at timestamptz default now()

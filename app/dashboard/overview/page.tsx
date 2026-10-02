@@ -61,7 +61,7 @@ export default async function Overview() {
     s.from('tasks').select('*', { count: 'exact', head: true }).eq('user_id', user.id).neq('status', 'done').not('reminder_at', 'is', null).lte('reminder_at', now.toISOString()),
   ]);
 
-  const t = twin || { available_hours: 5, sleep_hours: 7, study_hours: 2, work_hours: 0, workload_level: 'medium' };
+  const t = twin || { available_hours: 0, sleep_hours: 0, study_hours: 0, study_start_time: null, study_end_time: null, work_hours: 0, workload_level: 'unknown' };
   const allTasks = tasks || [];
   const activeTasks = allTasks.filter((x: any) => x.status !== 'done');
   const completedTasks = allTasks.filter((x: any) => x.status === 'done');
@@ -126,7 +126,7 @@ export default async function Overview() {
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <Metric label="Active tasks" value={activeTasks.length} pct={allTasks.length ? 100 - (activeTasks.length / allTasks.length * 100) : 0} icon={CheckCircle2} />
         <Metric label="Goals" value={goals?.length || 0} pct={avgGoalProgress} icon={Target} />
-        <Metric label="Study plan" value={`${t.study_hours}h/day`} pct={Math.min(100, Number(t.study_hours || 0) / 8 * 100)} icon={Clock3} />
+        <Metric label="Study plan" value={`${t.study_hours ?? 0}h/day`} pct={Math.min(100, Number(t.study_hours || 0) / 8 * 100)} icon={Clock3} />
         <Metric label="Task progress" value={`${avgProgress}%`} pct={avgProgress} icon={TrendingUp} />
       </div>
 
@@ -154,7 +154,7 @@ export default async function Overview() {
           <div className="mt-5 space-y-5">
             <MetricLine label="Available time" value={`${t.available_hours}h/day`} pct={Number(t.available_hours || 0) / 24 * 100}/>
             <MetricLine label="Sleep" value={`${t.sleep_hours}h`} pct={Number(t.sleep_hours || 0) / 12 * 100}/>
-            <MetricLine label="Study" value={`${t.study_hours}h/day`} pct={Number(t.study_hours || 0) / 8 * 100}/>
+            <MetricLine label="Study" value={`${t.study_hours ?? 0}h/day${t.study_start_time && t.study_end_time ? ` · ${formatTime(t.study_start_time)}–${formatTime(t.study_end_time)}` : ''}`} pct={Number(t.study_hours || 0) / 8 * 100}/>
             <MetricLine label="Workload" value={String(t.workload_level)} pct={t.workload_level === 'high' ? 85 : t.workload_level === 'medium' ? 55 : 30}/>
           </div>
           <Link href="/dashboard/scenarios" className="btn btn-primary mt-6 w-full gap-2">Run a scenario <ArrowRight size={16}/></Link>
