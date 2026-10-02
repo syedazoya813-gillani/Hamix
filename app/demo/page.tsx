@@ -1,13 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, CalendarDays, CheckCircle2, Clock3, Sparkles, Target, X } from 'lucide-react';
+import { ArrowRight, CalendarDays, CheckCircle2, Clock3, Sparkles, Target, X, type LucideIcon } from 'lucide-react';
 import { useState } from 'react';
 
 const tasks = [
   { title: 'DSA Quiz Preparation', meta: 'Today · 1.5h', priority: 'High', progress: 62 },
   { title: 'Database Assignment', meta: 'Tomorrow · 2h', priority: 'Medium', progress: 35 },
   { title: 'AI Semester Project', meta: 'Oct 10 · 4h', priority: 'High', progress: 20 },
+];
+
+const demoNavigation: Array<[string, LucideIcon, boolean]> = [
+  ['Overview', Sparkles, true],
+  ['Tasks', CheckCircle2, false],
+  ['Goals', Target, false],
+  ['Calendar', CalendarDays, false],
+  ['Assistant', Sparkles, false],
+  ['Reports', Clock3, false],
 ];
 
 export default function DemoPage() {
@@ -22,7 +31,7 @@ export default function DemoPage() {
       </header>
       {notice && <div className="border-b border-[#e7d5b6] bg-[#fff8eb]"><div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-5 py-3 text-sm text-[#76551f] md:px-8"><span><b>Demo mode:</b> This workspace uses sample data. No account or login is required.</span><button onClick={()=>setNotice(false)} aria-label="Close demo notice"><X size={17}/></button></div></div>}
       <div className="mx-auto grid max-w-[1400px] gap-0 md:grid-cols-[235px_1fr]">
-        <aside className="hidden border-r border-[#e7e1d7] py-8 pr-5 md:block"><div className="space-y-1">{[['Overview', Sparkles, true], ['Tasks', CheckCircle2, false], ['Goals', Target, false], ['Calendar', CalendarDays, false], ['Assistant', Sparkles, false], ['Reports', Clock3, false]].map(([label, Icon, active]) => <div key={label as string} className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium ${active ? 'bg-[#f0e5d1] text-[#805c25]' : 'text-[#737d8b]'}`}><Icon size={18}/>{label as string}</div>)}</div><div className="mt-10 rounded-2xl border border-[#e7d5b6] bg-white p-4"><div className="text-xs font-bold uppercase tracking-wider text-[#9a9182]">Demo workspace</div><p className="mt-2 text-sm leading-6 text-[#687386]">Explore how Hamix organizes tasks, time, goals and decisions.</p><Link href="/login" className="mt-4 inline-flex text-sm font-bold text-[#946b2f]">Get authorized access →</Link></div></aside>
+        <aside className="hidden border-r border-[#e7e1d7] py-8 pr-5 md:block"><div className="space-y-1">{demoNavigation.map(([label, Icon, active]) => <div key={label as string} className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium ${active ? 'bg-[#f0e5d1] text-[#805c25]' : 'text-[#737d8b]'}`}><Icon size={18}/>{label as string}</div>)}</div><div className="mt-10 rounded-2xl border border-[#e7d5b6] bg-white p-4"><div className="text-xs font-bold uppercase tracking-wider text-[#9a9182]">Demo workspace</div><p className="mt-2 text-sm leading-6 text-[#687386]">Explore how Hamix organizes tasks, time, goals and decisions.</p><Link href="/login" className="mt-4 inline-flex text-sm font-bold text-[#946b2f]">Get authorized access →</Link></div></aside>
         <section className="min-w-0 px-5 py-8 md:px-8 lg:px-10">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between"><div><div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#e7d5b6] bg-[#f4ead9] px-3 py-1.5 text-xs font-semibold text-[#946b2f]"><Sparkles size={14}/> Personal planning demo</div><h1 className="text-4xl font-black tracking-tight md:text-5xl">Your day, made clearer.</h1><p className="mt-2 max-w-2xl text-[#687386]">A preview of the Hamix workspace using realistic sample data.</p></div><Link href="/login" className="btn btn-primary w-fit">Use my Hamix <ArrowRight size={17}/></Link></div>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><Metric icon={CheckCircle2} label="Active tasks" value="4" sub="2 high priority" /><Metric icon={Target} label="Goal progress" value="68%" sub="Across 3 goals" /><Metric icon={Clock3} label="Study plan" value="2.5h/day" sub="5h available" /><Metric icon={CalendarDays} label="Next class" value="10:00 AM" sub="Artificial Intelligence" /></div>
