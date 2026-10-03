@@ -114,6 +114,23 @@ button,input,textarea,select{font:inherit}
 /* Forms and controls */
 select.input option{background:#fff;color:#202733}
 
+/* Mobile navigation drawer: must remain visible even though the desktop sidebar is hidden on small screens. */
+.mobile-drawer{
+  display:block!important;
+  visibility:visible!important;
+  transform:translateX(0);
+  background:#fffdfa;
+  border-right:1px solid var(--line);
+}
+
+@media (max-width: 767px){
+  .mobile-drawer{
+    display:block!important;
+    width:min(290px,86vw);
+    min-height:100dvh;
+  }
+}
+
 /* Responsive sidebar */
 @media (max-width: 767px){
   .sidebar{display:none}
