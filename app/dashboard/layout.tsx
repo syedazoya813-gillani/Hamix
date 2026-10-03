@@ -10,13 +10,15 @@ import {
   Settings,
   LogOut,
   Sparkles,
+  Home,
+  UserRound,
+  Download,
   Menu,
   X,
 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import InstallAppButton from '@/components/InstallAppButton';
 
 const navigation = [
   ['overview', 'Overview', LayoutDashboard],
@@ -28,10 +30,28 @@ const navigation = [
   ['reports', 'Reports', BarChart3],
 ] as const;
 
+const mobileNavigation = [
+  ['/dashboard/overview', 'Overview', Home],
+  ['/dashboard/tasks', 'Tasks', ListTodo],
+  ['/dashboard/assistant', 'Assistant', Sparkles],
+  ['/dashboard/reports', 'Reports', BarChart3],
+  ['/dashboard/settings', 'Settings', Settings],
+] as const;
+
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [mobile, setMobile] = useState(false);
+  const [installEvent, setInstallEvent] = useState<any>(null);
+
+  useEffect(() => {
+    const onBeforeInstall = (event: Event) => {
+      event.preventDefault();
+      setInstallEvent(event);
+    };
+    window.addEventListener('beforeinstallprompt', onBeforeInstall as EventListener);
+    return () => window.removeEventListener('beforeinstallprompt', onBeforeInstall as EventListener);
+  }, []);
 
   useEffect(() => {
     let timer: ReturnType<typeof setInterval> | undefined;
@@ -68,6 +88,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     timer = setInterval(() => void checkReminders(), 30000);
     return () => timer && clearInterval(timer);
   }, []);
+
+  async function installApp() {
+    if (!installEvent) return;
+    await installEvent.prompt();
+    setInstallEvent(null);
+  }
 
   async function logout() {
     const supabase = createClient();
@@ -129,7 +155,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Settings size={18} />
           Settings
         </Link>
-        <InstallAppButton />
         <button
           type="button"
           onClick={logout}
@@ -174,12 +199,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Menu size={19} />
             </button>
             <span className="flex items-center gap-2"><img src="/hamiq-mark.svg" alt="Hamiq" className="h-8 w-8 rounded-lg object-cover" /><span className="font-black">Hamiq</span></span>
-            <span className="h-9 w-9 rounded-full bg-[#f2e6d3]" />
+            <button type="button" onClick={installApp} disabled={!installEvent} className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f2e6d3] text-[#946b2f] disabled:opacity-40" aria-label="Install Hamiq"><Download size={17} /></button>
           </div>
         </header>
 
-        <div className="mx-auto max-w-[1380px] p-5 md:p-8 lg:p-10">{children}</div>
+        <div className="mx-auto max-w-[1380px] p-5 pb-24 md:p-8 md:pb-8 lg:p-10">{children}</div>
       </main>
+
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#e7e1d6] bg-white/95 px-2 py-2 shadow-[0_-8px_25px_rgba(43,34,21,.08)] backdrop-blur-md md:hidden" aria-label="Mobile navigation">
+        <div className="mx-auto grid max-w-xl grid-cols-5 gap-1">
+          {mobileNavigation.map(([href, label, Icon]) => {
+            const active = pathname === href || pathname.startsWith(`${href}/`);
+            return <Link key={href as string} href={href as string} className={`flex min-w-0 flex-col items-center gap-1 rounded-xl px-1 py-2 text-[10px] font-semibold ${active ? 'bg-[#f4ead9] text-[#946b2f]' : 'text-[#7b8490]'}`}><Icon size={18} /><span className="truncate">{label as string}</span></Link>;
+          })}
+        </div>
+      </nav>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import PWARegister from '@/components/PWARegister';
+import PWARegister from './pwa-register';
 
 export const metadata: Metadata = {
   title: 'Hamiq — Plan. Track. Achieve.',
@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <html lang="en"><body><PWARegister />{children}</body></html>;
+  return <html lang="en"><body>{children}<PWARegister /></body></html>;
 }

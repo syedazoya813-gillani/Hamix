@@ -67,7 +67,7 @@ export default function Onboarding() {
       work_hours: 0,
       study_start_time: studyStart || null,
       study_end_time: studyEnd || null,
-    });
+    }, { onConflict: 'user_id' });
 
     if (twinError) {
       setError(twinError.message);
