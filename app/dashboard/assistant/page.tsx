@@ -280,7 +280,7 @@ function ContextCard({
   );
 }
 
-export function AssistantMessage({ text }: { text: string }) {
+function AssistantMessage({ text }: { text: string }) {
   const lines = text.split(/\r?\n/);
   const blocks: React.ReactNode[] = [];
   let table: string[][] = [];
