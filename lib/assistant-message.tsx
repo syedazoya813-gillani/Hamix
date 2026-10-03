@@ -1,4 +1,5 @@
 import React from 'react';
+import { Clock3 } from 'lucide-react';
 
 export function AssistantMessage({ text }: { text: string }) {
   const lines = text.split(/\r?\n/);
