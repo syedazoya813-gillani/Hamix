@@ -1,21 +1,130 @@
-# Hamiq — Supabase + AI
+# Hamiq
 
-Hamiq is a full-stack personal scenario simulator. It stores the user's actual data in Supabase and uses a server-side AI provider for structured extraction and explanations.
+### Plan. Track. Achieve.
 
-## Stack
-- Next.js App Router + TypeScript
-- Supabase Auth + PostgreSQL + Storage
-- Groq or Gemini AI
-- Recharts
+Hamiq is a personal AI-powered planning and decision-support platform designed to help you understand your workload, organize your time, track your goals, and explore different **“what if?”** scenarios before making decisions.
+
+Instead of keeping tasks, goals, study time, habits, deadlines, and schedules in separate places, Hamiq brings them together into one personal workspace.
+
+## What Hamiq Does
+
+### 1. Plan your day
+Hamiq helps organize your available time around your tasks, classes, deadlines, study hours, goals, and other commitments.
+
+### 2. Track tasks and deadlines
+Create and manage tasks with priorities, deadlines, progress, categories, estimated hours, actual hours, and reminders.
+
+### 3. Manage goals
+Keep your long-term and short-term goals in one place and track progress toward them.
+
+### 4. Manage your schedule
+Use your timetable and events to understand when you are busy and where you have free time available.
+
+### 5. Track study time
+Your study time is treated as a variable rather than a fixed 2-hour-per-day assumption. Hamiq can work with the amount of study time you actually have available.
+
+### 6. Simulate “what if?” scenarios
+Hamiq can compare changes to your schedule, workload, available time, study time, sleep, and other personal variables using deterministic simulation logic.
+
+For example:
+
+> What happens if I increase my study time?
+
+> What happens if I add another assignment?
+
+> What happens if I reduce my available time?
+
+The simulator calculates scenario results from the provided variables rather than claiming to predict the future.
+
+### 7. AI-powered assistance
+Hamiq can use Groq or Gemini to understand unstructured information and turn it into useful structured items such as:
+
+- Tasks
+- Goals
+- Habits
+- Events
+- Deadlines
+- Projects
+- Schedules
+- Constraints
+- Notes
+
+The AI can also explain simulation results in a human-readable way.
+
+### 8. Universal Inbox
+You can provide information through the Inbox and Hamiq can extract useful items from it. Extracted information can be reviewed before it becomes part of your workspace.
+
+### 9. Reports and insights
+Hamiq provides progress and planning information so you can understand your workload, completed work, goals, and time usage.
+
+### 10. Personal memory
+Hamiq can store relevant personal planning information so your workspace can become more useful over time.
+
+## Demo and Authorized Access
+
+Hamiq includes a demo experience that can be explored without creating an account or logging in.
+
+The full workspace can be restricted to authorized users. Login credentials are provided by the administrator.
+
+For authorized access or project-related information, contact:
+
+**hammalalam406@gmail.com**
+
+## Core Idea
+
+Hamiq follows a simple workflow:
+
+```text
+Your Tasks + Goals + Schedule + Time + Habits
+                    ↓
+                 Hamiq
+                    ↓
+          Personal Baseline Model
+                    ↓
+             Scenario Variables
+                    ↓
+        Deterministic Simulation
+                    ↓
+             AI Explanation
+                    ↓
+          Clearer Planning Decisions
+```
+
+Hamiq is designed to support decision-making. It does not claim to know or predict the future with certainty.
+
+## Technology Stack
+
+- Next.js 15 App Router
+- TypeScript
+- React
 - Tailwind CSS
+- Supabase Auth
+- Supabase PostgreSQL
+- Supabase Storage
+- Groq AI
+- Google Gemini AI
+- Recharts
 
-## 1. Install
+## Project Structure
+
+```text
+app/                  Next.js pages and API routes
+lib/                  Core application logic
+lib/ai/               AI providers and extraction
+lib/simulation/       Deterministic scenario engine
+lib/supabase/         Supabase clients
+supabase/migrations/  Database migrations
+```
+
+## Getting Started
+
+### 1. Install dependencies
 
 ```bash
 npm install
 ```
 
-## 2. Environment
+### 2. Configure environment variables
 
 Copy `.env.example` to `.env.local`:
 
@@ -25,7 +134,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_PUBLIC_KEY
 
 AI_PROVIDER=groq
 GROQ_API_KEY=YOUR_GROQ_KEY
-GROQ_MODEL=llama-3.3-70b-versatile
+GROQ_MODEL=openai/gpt-oss-120b
 
 # Or use Gemini:
 # AI_PROVIDER=gemini
@@ -33,115 +142,94 @@ GROQ_MODEL=llama-3.3-70b-versatile
 # GEMINI_MODEL=gemini-2.5-flash
 ```
 
-The AI keys are server-side only. Do not prefix them with `NEXT_PUBLIC_`.
+AI keys must remain server-side. Do not prefix private AI keys with `NEXT_PUBLIC_`.
 
-## 3. Supabase database
+### 3. Configure Supabase
 
-Open Supabase SQL Editor and run:
+Open the Supabase SQL Editor and run the migrations in the `supabase/migrations/` directory in the intended order.
 
-`supabase/migrations/001_lifetwin.sql`
+The original database migration is:
 
-This creates the Hamiq tables, RLS policies, user trigger, and private `lifetwin-files` storage bucket.
+```text
+supabase/migrations/001_lifetwin.sql
+```
 
-## 4. Run
+The filename is retained for database migration compatibility.
+
+The task/reminder migration is:
+
+```text
+supabase/migrations/002_task_reminders.sql
+```
+
+### 4. Start Hamiq
 
 ```bash
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+Then open:
 
-## Where AI is integrated
+```text
+http://localhost:3000
+```
+
+## AI Integration
 
 ### Universal Inbox
 
-`POST /api/inbox` calls `lib/ai/extraction.ts`.
+`POST /api/inbox` uses `lib/ai/extraction.ts` to extract structured information from user input.
 
 Provider selection:
 
 ```text
-AI_PROVIDER=groq   -> lib/ai/groq.ts
-AI_PROVIDER=gemini -> lib/ai/gemini.ts
+AI_PROVIDER=groq   → lib/ai/groq.ts
+AI_PROVIDER=gemini → lib/ai/gemini.ts
 ```
 
-The AI extracts structured information such as:
-- TASK
-- GOAL
-- HABIT
-- EVENT
-- DEADLINE
-- PROJECT
-- SCHEDULE
-- CONSTRAINT
-- NOTE
+### Scenario Explanations
 
-The extracted result is saved to `inbox_items` and shown to the user for confirmation before it becomes a task/goal.
+`POST /api/ai/insights` receives deterministic simulation results and asks the configured AI provider to explain those results clearly.
 
-### Scenario AI explanation
+The AI is not responsible for the core simulation calculations and should not invent numerical results.
 
-`POST /api/ai/insights` receives deterministic simulation results and asks the selected AI provider to explain them. The AI does not perform the core math and must not invent numbers.
+### AI Status
 
-### AI status
+`GET /api/ai/status` reports whether the configured AI provider is available.
 
-`GET /api/ai/status` reports whether the configured provider has an API key. Settings and Inbox show this status.
+## Data and Privacy
 
-## Real user data
+Hamiq is designed to work with user-specific planning data stored in Supabase. Supabase Row Level Security (RLS) is used to restrict database access according to the application's authorization model.
 
-The app no longer depends on hard-coded demo data for the dashboard modules. Tasks, goals, habits, events, scenarios, memories, profiles and twin data are read/written through Supabase with RLS.
+Keep production API keys, database credentials, and other secrets out of source control.
 
-## Main flow
+## Task Editing, Reminders, and Progress
+
+The task system supports:
+
+- Progress tracking
+- Reminder times
+- Categories
+- Estimated hours
+- Actual hours
+- Priorities
+- Deadlines
+
+These features are added by:
 
 ```text
-Your data
-   ↓
-Supabase
-   ↓
-Hamiq baseline
-   ↓
-Scenario variables
-   ↓
-Deterministic simulation
-   ↓
-AI explanation
+supabase/migrations/002_task_reminders.sql
 ```
 
-Hamiq is a scenario simulator, not a literal future predictor.
+## Deployment
 
+Hamiq can be deployed to Vercel as a Next.js application.
 
-## Groq model
-The default Groq model is `openai/gpt-oss-120b`. You can override it with `GROQ_MODEL` in `.env.local`.
+Before deploying, add the required environment variables in the Vercel project settings, especially the Supabase and AI provider variables required by the features you enable.
 
-## Task editing, reminders, and progress reports
+## Vision
 
-Run the new migration after the original migration:
+Hamiq is built around one simple idea:
 
-`supabase/migrations/002_task_reminders.sql`
+**Plan better. Track what matters. Understand your choices. Achieve your goals.**
 
-It adds `progress`, `reminder_at`, `category`, and `actual_hours` to tasks.
-
-### Task features
-- Edit existing tasks
-- Update deadline, estimated/actual hours, priority, category and progress
-- Mark complete/incomplete
-- Set a browser reminder time
-- Enable browser notifications from the Tasks page
-
-Browser reminders work while the Hamiq tab is open. For reminders while the app is completely closed, add Web Push/FCM + a scheduled server/cron worker in production.
-
-### Progress reports
-Open `/dashboard/reports` from the sidebar. The report always reads the latest Supabase data and can be regenerated at any time. It includes task completion, workload, goal progress, habits/activity, and an optional AI-written summary. Use **Print / Save PDF** to export the report through the browser print dialog.
-
-## University timetable + personal assistant
-Run `supabase/migrations/003_timetable.sql` after the previous migrations. The app now includes:
-- `/dashboard/timetable` for recurring university classes
-- `/dashboard/assistant` for one personal Hamiq chatbot
-- `/api/recommendations` for deterministic task prioritization
-- `/api/assistant` for AI planning using the user's real Supabase data
-
-The assistant considers tasks, deadlines, progress, goals, class timetable, upcoming events, and Hamiq capacity. It provides suggestions, not guaranteed predictions.
-
-## Hamiq access flow
-- `/demo` is public and requires no login. It uses sample data only.
-- `/login` is for authorized users only.
-- Public self-registration is disabled; `/signup` redirects to `/login`.
-- Access requests: hammalalam406@gmail.com
