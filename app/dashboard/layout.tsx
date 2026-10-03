@@ -16,6 +16,7 @@ import {
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import InstallAppButton from '@/components/InstallAppButton';
 
 const navigation = [
   ['overview', 'Overview', LayoutDashboard],
@@ -128,6 +129,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Settings size={18} />
           Settings
         </Link>
+        <InstallAppButton />
         <button
           type="button"
           onClick={logout}
