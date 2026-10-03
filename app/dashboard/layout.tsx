@@ -49,8 +49,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       event.preventDefault();
       setInstallEvent(event);
     };
+
+    const onAppInstalled = () => setInstallEvent(null);
     window.addEventListener('beforeinstallprompt', onBeforeInstall as EventListener);
-    return () => window.removeEventListener('beforeinstallprompt', onBeforeInstall as EventListener);
+    window.addEventListener('appinstalled', onAppInstalled);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', onBeforeInstall as EventListener);
+      window.removeEventListener('appinstalled', onAppInstalled);
+    };
   }, []);
 
   useEffect(() => {
@@ -90,9 +96,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }, []);
 
   async function installApp() {
-    if (!installEvent) return;
-    await installEvent.prompt();
-    setInstallEvent(null);
+    if (installEvent) {
+      await installEvent.prompt();
+      setInstallEvent(null);
+      return;
+    }
+
+    // On browsers that do not expose beforeinstallprompt, the browser's own
+    // install UI must be used. Keeping the button disabled avoids a dead click.
+    if (typeof window !== 'undefined' && window.matchMedia('(display-mode: browser)').matches) {
+      alert('To install Hamiq, open Chrome menu (⋮) and choose “Install app”.');
+    }
   }
 
   async function logout() {
@@ -181,7 +195,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             onClick={() => setMobile(false)}
             className="absolute inset-0 bg-black/20 backdrop-blur-sm"
           />
-          <aside className="mobile-drawer sidebar relative h-full w-[290px] p-5 shadow-2xl">
+          <aside className="sidebar relative h-full w-[290px] p-5 shadow-2xl">
             <Nav close />
           </aside>
         </div>
@@ -193,13 +207,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <button
               type="button"
               onClick={() => setMobile(true)}
+              aria-expanded={mobile}
               className="rounded-xl border border-[#e5ddcf] bg-white p-2"
               aria-label="Open navigation"
             >
               <Menu size={19} />
             </button>
             <span className="flex items-center gap-2"><img src="/hamiq-mark.svg" alt="Hamiq" className="h-8 w-8 rounded-lg object-cover" /><span className="font-black">Hamiq</span></span>
-            <button type="button" onClick={installApp} disabled={!installEvent} className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f2e6d3] text-[#946b2f] disabled:opacity-40" aria-label="Install Hamiq"><Download size={17} /></button>
+            <button type="button" onClick={installApp} className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f2e6d3] text-[#946b2f]" aria-label="Install Hamiq"><Download size={17} /></button>
           </div>
         </header>
 

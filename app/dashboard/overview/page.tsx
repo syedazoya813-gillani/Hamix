@@ -26,7 +26,10 @@ function minutes(value: string) {
 }
 
 function formatTime(value: string) {
-  const [h, m] = value.slice(0, 5).split(':').map(Number);
+  const [rawH, rawM] = value.slice(0, 5).split(':').map(Number);
+  const total = ((rawH * 60 + rawM) % (24 * 60) + 24 * 60) % (24 * 60);
+  const h = Math.floor(total / 60);
+  const m = total % 60;
   const suffix = h >= 12 ? 'PM' : 'AM';
   const hour = h % 12 || 12;
   return `${hour}:${String(m).padStart(2, '0')} ${suffix}`;
@@ -98,57 +101,52 @@ export default async function Overview() {
   });
   for (const e of todayEvents) fixedBlocks.push({ start: Number(new Intl.DateTimeFormat('en-US', { timeZone: timezone, hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(e.start_time)).split(':')[0]) * 60 + Number(new Intl.DateTimeFormat('en-US', { timeZone: timezone, hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(e.start_time)).split(':')[1]), end: Number(new Intl.DateTimeFormat('en-US', { timeZone: timezone, hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(e.end_time)).split(':')[0]) * 60 + Number(new Intl.DateTimeFormat('en-US', { timeZone: timezone, hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(e.end_time)).split(':')[1]) });
 
+  // Free time is calculated inside the user's actual preferred study window
+  // when one is configured. If the window crosses midnight (e.g. 09:00–01:11),
+  // the end is treated as the next day's time instead of being forced to 22:00.
   fixedBlocks.sort((a, b) => a.start - b.start);
 
-  // Free-time calculation respects the user's actual preferred study window.
-  // If the end time is earlier than the start time, the window crosses midnight
-  // (for example 09:00 -> 01:11 means 9 AM until 1:11 AM the next day).
   const configuredStart = t.study_start_time ? minutes(t.study_start_time) : 8 * 60;
   const configuredEnd = t.study_end_time ? minutes(t.study_end_time) : 22 * 60;
   const crossesMidnight = Boolean(t.study_start_time && t.study_end_time && configuredEnd <= configuredStart);
 
   let windowStart = configuredStart;
-  let windowEnd = configuredEnd + (crossesMidnight ? 24 * 60 : 0);
-  let current = currentMinutes;
+  let windowEnd = configuredEnd;
+  if (crossesMidnight) windowEnd += 24 * 60;
 
-  if (crossesMidnight && current < configuredStart) current += 24 * 60;
-
-  // If a normal same-day window has already ended, there is no free window.
-  if (!crossesMidnight && current >= windowEnd) {
-    windowStart = current;
-    windowEnd = current;
-  } else {
-    windowStart = Math.max(current, windowStart);
-  }
-
-  // Move today's fixed blocks into the same timeline as the configured window.
-  const timelineBlocks = fixedBlocks.map((block) => {
-    let start = block.start;
-    let end = block.end;
-    if (crossesMidnight && start < configuredStart) {
-      start += 24 * 60;
-      end += 24 * 60;
-    }
-    return { start, end };
-  });
-
-  let freeStart = windowStart;
+  // Current time is on today's timeline. For an overnight window, the part
+  // after midnight belongs to the same active study window.
+  let currentOnWindow = currentMinutes;
+  if (crossesMidnight && currentMinutes < configuredStart) currentOnWindow += 24 * 60;
+  let freeStart = Math.max(currentOnWindow, windowStart);
   let freeWindow: { start: number; end: number } | null = null;
-  for (const block of timelineBlocks) {
-    if (block.end <= freeStart || block.start >= windowEnd) continue;
-    if (block.start - freeStart >= 30) {
-      freeWindow = { start: freeStart, end: Math.min(block.start, windowEnd) };
+
+  const blocksForWindow = fixedBlocks.flatMap((block) => {
+    const candidates = [
+      block,
+      { start: block.start + 24 * 60, end: block.end + 24 * 60 },
+    ];
+    return candidates.filter((x) => x.end > windowStart && x.start < windowEnd);
+  }).sort((a, b) => a.start - b.start);
+
+  for (const block of blocksForWindow) {
+    const blockStart = Math.max(windowStart, block.start);
+    const blockEnd = Math.min(windowEnd, block.end);
+    if (blockEnd <= freeStart) continue;
+    if (blockStart - freeStart >= 30) {
+      freeWindow = { start: freeStart, end: blockStart };
       break;
     }
-    freeStart = Math.max(freeStart, block.end);
+    freeStart = Math.max(freeStart, blockEnd);
   }
+
   if (!freeWindow && windowEnd - freeStart >= 30) {
     freeWindow = { start: freeStart, end: windowEnd };
   }
 
-  // Keep display times in the normal 24-hour clock range.
+  // Keep the display on a 24-hour clock even when the interval crosses midnight.
   if (freeWindow) {
-    freeWindow = { start: freeWindow.start % (24 * 60), end: freeWindow.end % (24 * 60) };
+    freeWindow = { start: freeWindow.start % (24 * 60), end: freeWindow.end % (24 * 60) || 24 * 60 };
   }
 
   const upcoming = activeTasks.slice(0, 5);
