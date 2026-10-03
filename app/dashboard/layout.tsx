@@ -181,7 +181,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             onClick={() => setMobile(false)}
             className="absolute inset-0 bg-black/20 backdrop-blur-sm"
           />
-          <aside className="sidebar relative h-full w-[290px] p-5 shadow-2xl">
+          <aside className="mobile-drawer sidebar relative h-full w-[290px] p-5 shadow-2xl">
             <Nav close />
           </aside>
         </div>

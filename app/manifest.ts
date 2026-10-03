@@ -13,10 +13,8 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: '#0f172a',
     categories: ['productivity', 'education'],
     icons: [
-      { src: '/icons/hamiq-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
-      { src: '/icons/hamiq-192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
-      { src: '/icons/hamiq-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
-      { src: '/icons/hamiq-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+      { src: '/icons/hamiq-192.png', sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
+      { src: '/icons/hamiq-512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' },
     ],
   };
 }
