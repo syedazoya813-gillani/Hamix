@@ -1,5 +1,5 @@
-const CACHE_NAME = 'hamiq-shell-v1';
-const APP_SHELL = ['/demo', '/hamiq-mark.svg', '/hamiq-logo.svg', '/icons/hamiq-192.png', '/icons/hamiq-512.png'];
+const CACHE_NAME = 'hamiq-shell-v2';
+const APP_SHELL = ['/', '/demo', '/hamiq-mark.svg', '/hamiq-logo.svg', '/icons/hamiq-192.png', '/icons/hamiq-512.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -30,6 +30,6 @@ self.addEventListener('fetch', (event) => {
         }
         return response;
       })
-      .catch(() => caches.match(request).then((cached) => cached || caches.match('/demo')))
+      .catch(() => caches.match(request).then((cached) => cached || caches.match('/') || caches.match('/demo')))
   );
 });

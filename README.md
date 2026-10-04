@@ -49,7 +49,7 @@ This creates the Hamiq tables, RLS policies, user trigger, and private `lifetwin
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+For the deployed app, open `https://hamiq.vercel.app`. For local development, use `http://localhost:3000`.
 
 ## Where AI is integrated
 
