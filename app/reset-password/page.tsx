@@ -23,9 +23,9 @@ export default function ResetPasswordPage() {
         active = false;
       };
     }
-
-    supabase.auth.getSession().then(({ data, error: sessionError }) => {
-      if (!active) return;
+    
+     supabase.auth.getSession().then(({ data, error: sessionError }: any) => {
+       if (!active) return;
 
       if (sessionError) {
         setError(sessionError.message);
