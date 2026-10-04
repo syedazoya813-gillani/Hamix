@@ -57,6 +57,14 @@ export default function Login() {
           <input required value={email} onChange={e => setEmail(e.target.value)} className="input mt-2" placeholder="Your authorized email" type="email" autoComplete="email" />
           <label className="mt-4 block text-sm font-semibold text-[#1d2635]">Password</label>
           <input required value={password} onChange={e => setPassword(e.target.value)} className="input mt-2" placeholder="Your password" type="password" autoComplete="current-password" />
+          <div className="mt-2 text-right">
+  <Link
+    href="/forgot-password"
+    className="text-sm font-semibold text-[#946b2f] hover:underline"
+  >
+    Forgot Password?
+  </Link>
+</div>
 
           {error && <p className="mt-3 rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
 
