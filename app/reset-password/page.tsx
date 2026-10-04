@@ -21,8 +21,8 @@ export default function ResetPasswordPage() {
       return () => { active = false; };
     }
 
-    supabase.auth.getSession().then((result) => {
-      if (active) setReady(Boolean(result.data.session));
+    supabase.auth.getSession().then(({ data }) => {
+      if (active) setReady(Boolean(data.session));
     });
 
     const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
